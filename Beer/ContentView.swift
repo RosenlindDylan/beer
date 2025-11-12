@@ -11,22 +11,39 @@ import SwiftData
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var beerItems: [BeerItem]
+    
+    @Query(
+        filter: #Predicate<BeerItem> { beer in
+            beer.timestamp >= todayRange.lowerBound &&
+            beer.timestamp < todayRange.upperBound
+        },
+        sort: \.timestamp,
+        order: .reverse
+    ) private var todayBeers: [BeerItem]
+    
     private var beerCount: Int { beerItems.count }
+    private var todayCount: Int {todayBeers.count}
     
 
     var body: some View {
         NavigationStack {
                 VStack(spacing: 12) {
                     // Centered beer count
-                    Text("Beers Today: \(beerCount)")
+                    Text("Beers Today: \(todayCount)")
                         .font(.title2)
                         .fontWeight(.semibold)
                         .padding(.top, 8)
                         .frame(maxWidth: .infinity) // ensures centering horizontally
+                    Text("Total Beers Drank: \(beerCount)")
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .padding(.top, 8)
+                        .frame(maxWidth: .infinity)
 
                     Button(action: addBeerItem) {
-                        Text("+Add Beer+")
+                        Text("Drank A Beer")
                     }
+                    .buttonStyle(.borderedProminent)
                 }
                 .navigationTitle("Beer Counter 🍻")
                 .navigationBarTitleDisplayMode(.inline)
@@ -40,6 +57,15 @@ struct ContentView: View {
             modelContext.insert(beerItem)
         }
     }
+    
+    static var todayRange: Range<Date> = {
+        let cal = Calendar.current
+        let start = cal.startOfDay(for: Date())
+        let end = cal.date(byAdding: .day, value: 1, to: start)!
+        return start..<end
+    }()
+    
+    
 
     
     
