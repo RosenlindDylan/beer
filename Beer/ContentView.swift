@@ -44,16 +44,17 @@ struct ContentView: View {
                         Text("Drank A Beer")
                     }
                     .buttonStyle(.borderedProminent)
+                    
+                    Text("Last Beer Type:  \(beerItems.last?.type ?? "None")")
                 }
                 .navigationTitle("Beer Counter 🍻")
-                .navigationBarTitleDisplayMode(.inline)
             }
 
     }
 
     private func addBeerItem() {
         withAnimation {
-            let beerItem = BeerItem(timestamp: Date())
+            let beerItem = BeerItem(timestamp: Date(), type: "lager")
             modelContext.insert(beerItem)
         }
     }
