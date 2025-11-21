@@ -11,7 +11,7 @@
 
 import SwiftUI
 import SwiftData
-internal import Combine
+import Combine
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -131,7 +131,7 @@ struct ContentView: View {
         guard cooldown == 0 else { return }
 
         withAnimation {
-            let beer = BeerItem(timestamp: Date())
+            let beer = BeerItem(timestamp: Date(), type: "lager")
             modelContext.insert(beer)
 
             // Set cooldown - this is required so it persists on app close
