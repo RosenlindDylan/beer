@@ -11,8 +11,10 @@ import SwiftData
 @Model
 final class BeerItem {
     var timestamp: Date
+    var type: String
     
-    init(timestamp: Date) {
+    init(timestamp: Date, type: String) {
         self.timestamp = timestamp
+        self.type = type
     }
 }
