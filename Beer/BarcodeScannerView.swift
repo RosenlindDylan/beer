@@ -7,23 +7,37 @@ struct BarcodeScannerView: View {
     @Binding var scannedText: String
     
     var body: some View {
-        if DataScannerViewController.isSupported && DataScannerViewController.isAvailable {
-            ZStack(alignment: .bottom) {
-                DataScannerRepresentable(
-                    shouldStartScanning: $isShowingScanner,
-                    scannedText: $scannedText,
-                    dataToScanFor: [.barcode(symbologies: [.qr])]
-                )
-                
-                Text(scannedText)
-                    .padding()
-                    .background(Color.white)
-                    .foregroundColor(.black)
+        // Main Scanner Content
+        Group {
+            if DataScannerViewController.isSupported && DataScannerViewController.isAvailable {
+                ZStack(alignment: .bottom) {
+                    DataScannerRepresentable(
+                        shouldStartScanning: $isShowingScanner,
+                        scannedText: $scannedText,
+                        dataToScanFor: [.barcode(symbologies: [.qr])]
+                    )
+                    
+                    Text(scannedText)
+                        .padding()
+                        .background(Color.white)
+                        .foregroundColor(.black)
+                }
+            } else if !DataScannerViewController.isSupported {
+                Text("It looks like this device doesn't support the DataScannerViewController")
+            } else {
+                Text("It appears your camera may not be available")
             }
-        } else if !DataScannerViewController.isSupported {
-            Text("It looks like this device doesn't support the DataScannerViewController")
-        } else {
-            Text("It appears your camera may not be available")
         }
+        
+        // Close (“X”) button
+        Button(action: {
+            isShowingScanner = false
+        }) {
+            Image(systemName: "xmark.circle.fill")
+                .font(.system(size: 32))
+                .foregroundColor(.white)
+                .shadow(radius: 4)
+        }
+        .padding()
     }
 }
