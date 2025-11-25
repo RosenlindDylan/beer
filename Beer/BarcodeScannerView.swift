@@ -14,7 +14,7 @@ struct BarcodeScannerView: View {
                     DataScannerRepresentable(
                         shouldStartScanning: $isShowingScanner,
                         scannedText: $scannedText,
-                        dataToScanFor: [.barcode(symbologies: [.qr])]
+                        dataToScanFor: [.barcode()]
                     )
                     
                     Text(scannedText)
@@ -28,6 +28,7 @@ struct BarcodeScannerView: View {
                 Text("It appears your camera may not be available")
             }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         
         // Close (“X”) button
         Button(action: {
@@ -38,6 +39,7 @@ struct BarcodeScannerView: View {
                 .foregroundColor(.white)
                 .shadow(radius: 4)
         }
-        .padding()
+        .padding(.top, 16)
+        .padding(.leading, 16)
     }
 }
