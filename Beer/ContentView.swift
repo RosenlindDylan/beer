@@ -131,7 +131,7 @@ struct ContentView: View {
         guard cooldown == 0 else { return }
 
         withAnimation {
-            let beer = BeerItem(timestamp: Date(), type: "lager")
+            let beer = BeerItem(timestamp: Date())
             modelContext.insert(beer)
 
             // Set cooldown - this is required so it persists on app close
