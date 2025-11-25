@@ -1,10 +1,10 @@
 import SwiftUI
 import VisionKit
-internal import Vision
+import Vision
 
 struct BarcodeScannerView: View {
-    @State var isShowingScanner = true
-    @State private var scannedText = ""
+    @Binding var isShowingScanner: Bool
+    @Binding var scannedText: String
     
     var body: some View {
         if DataScannerViewController.isSupported && DataScannerViewController.isAvailable {
