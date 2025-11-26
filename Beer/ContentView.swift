@@ -12,6 +12,7 @@
 import SwiftUI
 import SwiftData
 import Combine
+import VisionKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -55,6 +56,9 @@ struct ContentView: View {
     let cooldownSeconds = 60
 
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    
+    @State private var isShowingScanner = false
+    @State private var scannedText = ""
 
     var body: some View {
         NavigationStack {
@@ -90,6 +94,13 @@ struct ContentView: View {
                 .padding(.horizontal)
 
                 Spacer()
+                
+                Button("Scan QR Code") {
+                    isShowingScanner = true
+                }
+                .padding(.top, 8)
+                
+                Spacer()
 
 
                 // Navigation
@@ -103,6 +114,11 @@ struct ContentView: View {
         }
         .onAppear { restoreCooldown() }
         .onReceive(timer) { _ in tick() }
+        .fullScreenCover(isPresented: $isShowingScanner) {
+            BarcodeScannerView(
+                isShowingScanner: $isShowingScanner,
+                scannedText: $scannedText)
+        }
     }
 
     // Cooldown logic
@@ -131,7 +147,7 @@ struct ContentView: View {
         guard cooldown == 0 else { return }
 
         withAnimation {
-            let beer = BeerItem(timestamp: Date(), type: "lager")
+            let beer = BeerItem(timestamp: Date())
             modelContext.insert(beer)
 
             // Set cooldown - this is required so it persists on app close
