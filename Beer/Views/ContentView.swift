@@ -5,9 +5,6 @@
 //  Created by Travis Hand on 11/8/25.
 //
 //
-//  ContentView.swift
-//  Beer
-//
 
 import SwiftUI
 import SwiftData
