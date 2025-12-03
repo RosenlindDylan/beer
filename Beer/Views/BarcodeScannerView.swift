@@ -14,13 +14,15 @@ struct BarcodeScannerView: View {
                     DataScannerRepresentable(
                         shouldStartScanning: $isShowingScanner,
                         scannedText: $scannedText,
-                        dataToScanFor: [.barcode()]
+                        dataToScanFor: [.barcode(symbologies: [
+                            .ean8,
+                            .ean13,
+                            .upce,
+                            .code128,
+                            .code39,
+                            .qr
+                        ])]
                     )
-                    
-                    Text(scannedText)
-                        .padding()
-                        .background(Color.white)
-                        .foregroundColor(.black)
                 }
             } else if !DataScannerViewController.isSupported {
                 Text("It looks like this device doesn't support the DataScannerViewController")
