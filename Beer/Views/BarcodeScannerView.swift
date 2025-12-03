@@ -16,11 +16,6 @@ struct BarcodeScannerView: View {
                         scannedText: $scannedText,
                         dataToScanFor: [.barcode()]
                     )
-                    
-                    Text(scannedText)
-                        .padding()
-                        .background(Color.white)
-                        .foregroundColor(.black)
                 }
             } else if !DataScannerViewController.isSupported {
                 Text("It looks like this device doesn't support the DataScannerViewController")
