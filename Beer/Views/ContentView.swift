@@ -89,13 +89,6 @@ struct ContentView: View {
                 .tint(cooldown == 0 ? .blue : .gray)
                 .disabled(cooldown > 0)
                 .padding(.horizontal)
-
-                Spacer()
-                
-                Button("Scan QR Code") {
-                    isShowingScanner = true
-                }
-                .padding(.top, 8)
                 
                 Spacer()
 
@@ -150,6 +143,7 @@ struct ContentView: View {
             // Set cooldown - this is required so it persists on app close
             cooldown = cooldownSeconds
             UserDefaults.standard.set(Date(), forKey: "lastBeerTimestamp")
+            isShowingScanner = true
         }
     }
 

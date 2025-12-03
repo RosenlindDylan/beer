@@ -33,8 +33,7 @@ struct DataScannerRepresentable: UIViewControllerRepresentable {
             switch item {
             case .barcode(let barcode):
                 parent.scannedText = barcode.payloadStringValue ?? "No payload"
-            case .text(let text):
-                parent.scannedText = text.transcript
+                parent.shouldStartScanning = false
             default:
                 break
             }
