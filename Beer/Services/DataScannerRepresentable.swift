@@ -13,14 +13,30 @@ struct DataScannerRepresentable: UIViewControllerRepresentable {
            self.parent = parent
        }
                
-        func dataScanner(_ dataScanner: DataScannerViewController, didTapOn item: RecognizedItem) {
+        // Called when user taps a recognized item
+        func dataScanner(_ dataScanner: DataScannerViewController,
+                         didTapOn item: RecognizedItem) {
+            handle(item: item)
+        }
+
+        // Called automatically when new items appear in the camera feed
+        func dataScanner(_ dataScanner: DataScannerViewController,
+                         didAdd addedItems: [RecognizedItem],
+                         allItems: [RecognizedItem]) {
+            // e.g. just take the first one
+            if let first = addedItems.first {
+                handle(item: first)
+            }
+        }
+
+        private func handle(item: RecognizedItem) {
             switch item {
+            case .barcode(let barcode):
+                parent.scannedText = barcode.payloadStringValue ?? "No payload"
             case .text(let text):
                 parent.scannedText = text.transcript
-            case .barcode(let barcode):
-                parent.scannedText = barcode.payloadStringValue ?? "Unable to decode the scanned code"
             default:
-                print("unexpected item")
+                break
             }
         }
     }
