@@ -13,36 +13,25 @@ import VisionKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var beerItems: [BeerItem]
 
-    @Query(
-        filter: #Predicate<BeerItem> { beer in
-            beer.timestamp >= todayRange.lowerBound &&
-            beer.timestamp < todayRange.upperBound
-        },
-        sort: \.timestamp,
-        order: .reverse
-    ) private var todayBeers: [BeerItem]
-    
-    // calculate this week's beers
-    @Query(
-        filter: #Predicate<BeerItem> { beer in
-            beer.timestamp >= weekRange.lowerBound &&
-            beer.timestamp < weekRange.upperBound
-        },
-        sort: \.timestamp,
-        order: .reverse
-    ) private var weekBeers: [BeerItem]
-    
-    // calculate this month's beers
-    @Query(
-        filter: #Predicate<BeerItem> { beer in
-            beer.timestamp >= monthRange.lowerBound &&
-            beer.timestamp < monthRange.upperBound
-        },
-        sort: \.timestamp,
-        order: .reverse
-    ) private var monthBeers: [BeerItem]
+    // this happens in memory, could become tech debt issue
+    // better format for testing than prev but revisit this
+    @Query(sort: \BeerItem.timestamp, order: .reverse) private var beerItems: [BeerItem]
+
+    private var todayBeers: [BeerItem] {
+        let r = DateRanges.today(now: Date())
+        return beerItems.filter { r.contains($0.timestamp) }
+    }
+
+    private var weekBeers: [BeerItem] {
+        let r = DateRanges.thisWeek(now: Date())
+        return beerItems.filter { r.contains($0.timestamp) }
+    }
+
+    private var monthBeers: [BeerItem] {
+        let r = DateRanges.thisMonth(now: Date())
+        return beerItems.filter { r.contains($0.timestamp) }
+    }
 
     private var beerCount: Int { beerItems.count }
     private var monthCount: Int { monthBeers.count }
@@ -146,28 +135,4 @@ struct ContentView: View {
             isShowingScanner = true
         }
     }
-
-    static var todayRange: Range<Date> = {
-        let cal = Calendar.current
-        let start = cal.startOfDay(for: Date())
-        let end = cal.date(byAdding: .day, value: 1, to: start)!
-        return start..<end
-    }()
-    
-    // DR TODO This should be a fixed week ie monday - sunday rather than the past week from today
-    //      so like how strava has your miles of the week and it resets
-    static var weekRange: Range<Date> = {
-        let cal = Calendar.current
-        let start = cal.startOfDay(for: Date())
-        let end = cal.date(byAdding: .weekOfYear, value: 1, to: start)!
-        return start..<end
-    }()
-    
-    // DR TODO Same change like weekRange here as well
-    static var monthRange: Range<Date> = {
-        let cal = Calendar.current
-        let start = cal.startOfDay(for: Date())
-        let end = cal.date(byAdding: .month, value: 1, to: start)!
-        return start..<end
-    }()
 }
