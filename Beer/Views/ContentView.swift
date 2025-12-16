@@ -154,20 +154,19 @@ struct ContentView: View {
         return start..<end
     }()
     
-    // DR TODO This should be a fixed week ie monday - sunday rather than the past week from today
-    //      so like how strava has your miles of the week and it resets
     static var weekRange: Range<Date> = {
         let cal = Calendar.current
-        let start = cal.startOfDay(for: Date())
-        let end = cal.date(byAdding: .weekOfYear, value: 1, to: start)!
+        let week = cal.dateInterval(of: .weekOfYear, for: Date())!
+        let start = week.start
+        let end = week.end
         return start..<end
     }()
     
-    // DR TODO Same change like weekRange here as well
     static var monthRange: Range<Date> = {
         let cal = Calendar.current
-        let start = cal.startOfDay(for: Date())
-        let end = cal.date(byAdding: .month, value: 1, to: start)!
+        let month = cal.dateInterval(of: .month, for: Date())!
+        let start = month.start
+        let end = month.end
         return start..<end
     }()
 }
